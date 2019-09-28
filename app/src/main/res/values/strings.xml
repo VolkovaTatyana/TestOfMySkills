@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">TestOfMySkills</string>
+    <string name="add_new_coworker">Add new coworker</string>
+    <string name="enter_name">Enter name</string>
+    <string name="enter_age">Enter age</string>
+    <string name="enter_phone_number">Enter phone number</string>
+    <string name="save_data">Save data</string>
+</resources>
