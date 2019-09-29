@@ -3,6 +3,8 @@ package com.example.testofmyskills;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
@@ -10,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 public class Main2Activity extends AppCompatActivity {
 
@@ -30,27 +33,40 @@ public class Main2Activity extends AppCompatActivity {
         age = findViewById(R.id.et_age);
         phone = findViewById(R.id.et_phone);
         btnSave = findViewById(R.id.b_save);
+        radioGroup = findViewById(R.id.r_group);
 
         dbHelper = new DBHelper(this);
-        radioGroup = findViewById(R.id.r_group);
 
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                int iage = 0;
                 String sname = name.getText().toString();
-                int iage = Integer.valueOf(age.getText().toString());
                 String sphone = phone.getText().toString();
+                String gender = checkButton(view);
+                if (!age.getText().toString().isEmpty())
+                    iage = Integer.parseInt(age.getText().toString());
 
                 SQLiteDatabase database = dbHelper.getWritableDatabase();
 
-                ContentValues contentValues = new ContentValues();
+                ContentValues contentValues = new ContentValues(); //row in table
 
-                contentValues.put(DBHelper.KEY_NAME,sname);
-                contentValues.put(DBHelper.KEY_AGE,iage);
-                contentValues.put(DBHelper.KEY_PHONE,sphone);
-                contentValues.put(DBHelper.KEY_GENDER,checkButton(view));
+                if (sname != "" && iage != 0 && sphone != "") {
+                    contentValues.put(DBHelper.KEY_NAME, sname);
+                    contentValues.put(DBHelper.KEY_AGE, iage);
+                    contentValues.put(DBHelper.KEY_PHONE, sphone);
+                    contentValues.put(DBHelper.KEY_GENDER, gender);
 
-                database.insert(DBHelper.TABLE, null, contentValues);
+                    database.insert(DBHelper.TABLE, null, contentValues);
+                }
+
+                Context context = Main2Activity.this;
+
+                Class destinationActivity = MainActivity.class;
+
+                Intent mainActivityIntent = new Intent(context, destinationActivity);
+
+                startActivity(mainActivityIntent);
             }
         };
 
@@ -58,7 +74,7 @@ public class Main2Activity extends AppCompatActivity {
 
     }
 
-    public String checkButton(View v){
+    public String checkButton(View v) {
         int radioId = radioGroup.getCheckedRadioButtonId();
         radioButton = findViewById(radioId);
 
